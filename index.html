@@ -3,14 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <title>G-code X 변환기</title>
+    <label>
+    X: <input type="number" id="offsetX" value="10" />
+    </label>
+    <label>
+    Y: <input type="number" id="offsetY" value="0" />
+    </label>
+    <label>
+    Z: <input type="number" id="offsetZ" value="0" />
+    </label>
   <style>
-    body { font-family: monospace; padding: 2rem; background: #f0f0f0; }
+    body { padding: 2rem; }
     textarea { width: 100%; height: 200px; margin-bottom: 1rem; }
-    button { padding: 0.5rem 1rem; font-size: 1rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; margin-bottom: 1rem;}
   </style>
 </head>
 <body>
-  <h1>G-code X 좌표 변환기 (+10)</h1>
+  <h1>G-code X 좌표 +10</h1>
   <textarea id="input" placeholder="G-code 입력"></textarea>
   <button onclick="convert()">변환</button>
   <textarea id="output" placeholder="결과 출력"></textarea>
@@ -18,9 +27,15 @@
   <script src="script.js"></script>
   <script>
     function convert() {
-      const input = document.getElementById('input').value;
-      const output = processGCode(input);
-      document.getElementById('output').value = output;
+    const input = document.getElementById('input').value;
+    const offsets = {
+        X: parseFloat(document.getElementById('offsetX').value) || 0,
+        Y: parseFloat(document.getElementById('offsetY').value) || 0,
+        Z: parseFloat(document.getElementById('offsetZ').value) || 0,
+        E: parseFloat(document.getElementById('offsetE').value) || 0,
+    };
+    const output = processGCode(input, offsets);
+    document.getElementById('output').value = output;
     }
   </script>
 </body>

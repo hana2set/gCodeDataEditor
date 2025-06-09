@@ -1,20 +1,31 @@
-function processGCode(input) {
+function processGCode(input, offsets = {}) {
   const lines = input.split('\n');
   const result = [];
 
+  const fields = Object.keys(offsets).map(k => k.toUpperCase());
+
   for (const line of lines) {
-    if (line.startsWith(';TYPE:')) {
-      result.push(line); // 주석 라인 그대로 유지
+    if (line.startsWith(';') || 
+        !line.startsWith('G')) {
+      result.push(line);
       continue;
     }
 
-    // 정규식으로 X 좌표 찾고 +10 적용
-    const modifiedLine = line.replace(/X([-+]?[0-9]*\.?[0-9]+)/g, (_, x) => {
-      const newX = (parseFloat(x) + 10).toFixed(3);
-      return `X${newX}`;
+    const parts = line.trim().split(/\s+/); // 공백 기준 분할
+    const modifiedParts = parts.map(part => {
+      const axis = part[0].toUpperCase();
+      const value = parseFloat(part.slice(1));
+
+      if (fields.includes(axis) && !isNaN(value)) {
+        const offset = offsets[axis] || 0;
+        const newValue = (value + offset).toFixed(3);
+        return `${axis}${newValue}`;
+      }
+
+      return part; // 변경 없는 항목
     });
 
-    result.push(modifiedLine);
+    result.push(modifiedParts.join(' '));
   }
 
   return result.join('\n');
