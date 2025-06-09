@@ -45,6 +45,7 @@ function processGCode(input, offsets = {}) {
   return result.join('\n');
 
 
+  // 내부 함수
   function modifyPos(part) {
         const axis = part[0].toUpperCase();
         const value = parseFloat(part.slice(1));
@@ -55,6 +56,15 @@ function processGCode(input, offsets = {}) {
             return `${axis}${newValue}`;
         }
 
-        return part; // 변경 없는 항목
+        return part;
   }
+}
+
+
+function copy() {
+    convert();
+    setTimeout(() => {
+        navigator.clipboard.writeText(document.getElementById("output").value);
+        alert("복사되었습니다.");
+    });
 }
