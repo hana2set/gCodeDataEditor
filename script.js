@@ -52,7 +52,7 @@ function processGCode(input, offsets = {}) {
 
         if (fields.includes(axis) && !isNaN(value)) {
             const offset = offsets[axis] || 0;
-            const newValue = value + offset;
+            const newValue = Number((value + offset).toFixed(5));
             return `${axis}${newValue}`;
         }
 
@@ -67,4 +67,45 @@ function copy() {
         navigator.clipboard.writeText(document.getElementById("output").value);
         alert("복사되었습니다.");
     });
+}
+
+
+// 이벤트 영역
+{
+    const inputArea = document.getElementById('input');
+    const overlay = document.getElementById('overlay');
+    
+    // 파일 Drag 이벤트트
+    ['dragenter', 'dragover'].forEach(eventName => {
+    inputArea.addEventListener(eventName, e => {
+        e.preventDefault();
+        overlay.style.display = 'flex';
+    }, false);
+    });
+
+
+    ['dragleave', 'drop'].forEach(eventName => {
+    inputArea.addEventListener(eventName, e => {
+        e.preventDefault();
+        overlay.style.display = 'none';
+    }, false);
+    });
+
+
+    inputArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                inputArea.value = evt.target.result;
+            };
+            reader.onerror = function() {
+                alert("파일을 읽는 도중 오류가 발생했습니다.");
+            };
+
+            reader.readAsText(file);
+    });
+
+
+
 }

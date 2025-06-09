@@ -22,6 +22,23 @@
     </label>
 
   <textarea id="input" placeholder="G-code 입력"></textarea>
+  <div id="overlay" style="
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 20px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    pointer-events: none;
+  ">
+    파일을 여기로 드래그하세요
+  </div>
   <button onclick="convert()">변환</button>
   <button onclick="copy()">변환 및 복사</button>
   <textarea id="output" placeholder="결과 출력"></textarea>
