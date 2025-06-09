@@ -69,6 +69,22 @@ function copy() {
     });
 }
 
+function download() {
+  const blob = new Blob([document.getElementById('output').value], { type: 'text/plain' }); // 또는 'application/octet-stream'
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = document.getElementById('filename').value;
+  a.style.display = 'none';
+
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url); // 메모리 해제
+}
+
 
 // 이벤트 영역
 {
@@ -98,6 +114,7 @@ function copy() {
             const reader = new FileReader();
             reader.onload = function(evt) {
                 inputArea.value = evt.target.result;
+                document.getElementById('filename').value = file.name;
             };
             reader.onerror = function() {
                 alert("파일을 읽는 도중 오류가 발생했습니다.");
