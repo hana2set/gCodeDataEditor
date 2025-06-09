@@ -52,7 +52,7 @@ function processGCode(input, offsets = {}) {
 
         if (fields.includes(axis) && !isNaN(value)) {
             const offset = offsets[axis] || 0;
-            const newValue = Number((value + offset).toFixed(5));
+            const newValue = Number((value + offset).toFixed(3));
             return `${axis}${newValue}`;
         }
 
