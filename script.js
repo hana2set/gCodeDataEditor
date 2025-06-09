@@ -22,22 +22,39 @@ function processGCode(input, offsets = {}) {
       continue;
     }
 
+    let isItNotMain = false;
+
     const parts = line.trim().split(/\s+/); // 공백 기준 분할
-    const modifiedParts = parts.map(part => {
-      const axis = part[0].toUpperCase();
-      const value = parseFloat(part.slice(1));
+    const modifiedParts = [];
+    for (const part of parts) {
+        if (part.startsWith(";")) {
+            isItNotMain = true;
+            break;
+        }
+        modifiedParts.push(modifyPos(part));
+    }
 
-      if (fields.includes(axis) && !isNaN(value)) {
-        const offset = offsets[axis] || 0;
-        const newValue = (value + offset).toFixed(3);
-        return `${axis}${newValue}`;
-      }
 
-      return part; // 변경 없는 항목
-    });
-
-    result.push(modifiedParts.join(' '));
+    if (isItNotMain) {
+        result.push(line);
+    } else {
+        result.push(modifiedParts.join(' '));
+    }
   }
 
   return result.join('\n');
+
+
+  function modifyPos(part) {
+        const axis = part[0].toUpperCase();
+        const value = parseFloat(part.slice(1));
+
+        if (fields.includes(axis) && !isNaN(value)) {
+            const offset = offsets[axis] || 0;
+            const newValue = value + offset;
+            return `${axis}${newValue}`;
+        }
+
+        return part; // 변경 없는 항목
+  }
 }
