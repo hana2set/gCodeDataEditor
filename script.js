@@ -1,3 +1,14 @@
+function convert() {
+    const input = document.getElementById('input').value;
+    const offsets = {
+        X: parseFloat(document.getElementById('offsetX').value) || 0,
+        Y: parseFloat(document.getElementById('offsetY').value) || 0,
+        Z: parseFloat(document.getElementById('offsetZ').value) || 0,
+    };
+    const output = processGCode(input, offsets);
+    document.getElementById('output').value = output;
+}
+
 function processGCode(input, offsets = {}) {
   const lines = input.split('\n');
   const result = [];
